@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue-mvvm-demo</title>
+</head>
+
+<body>
+<div id="app">
+  插值表达式
+  <h3>{{msg}}</h3>
+  <div>
+    hhh,{{text}}
+    <p v-html="demo"></p>
+  </div>
+  <h4>{{color.red}}</h4>
+  <h4>{{color.other.block}}</h4>
+  <!-- vue的指令 -->
+  <p v-text="msg"></p>
+  <input type="text" v-model="msg">
+  <button v-on:click='_handleClick'>按钮</button>
+</div>
+
+<script src="./src/watcher.js"></script>
+<script src="./src/observe.js"></script>
+<script src="./src/compile.js"></script>
+<script src="./src/vue.js"></script>
+<script>
+  // let app = document.getElementById('app')
+  const vm = new Vue({
+    el: '#app',
+    data: {
+      msg: 'hello vue',
+      demo: '<h1>我是h1标签</h1>',
+      text: '呵呵呵呵',
+      color: {
+        red: 'red',
+        yellow: 'yellow',
+        other: {
+          block: 'block'
+        }
+      }
+    },
+    methods: {
+      _handleClick() {
+        //vue 中this指向当前vm实例
+        console.log(this.msg)
+        this.msg = '改变red'
+      }
+    }
+  })
+</script>
+</body>
+
+</html>
