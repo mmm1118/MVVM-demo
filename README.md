@@ -20,27 +20,15 @@
    - vue.js 则是采用数据劫持结合发布者-订阅者模式的方式。通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。(vuejs不兼容IE8以下的版本)
 
 ## Vue实现思路
-  1. [实现一个Compiler模板解析器，能够对模版中的指令和插值表达式进行解析,并且赋予不同的操作](#vm1)
-  2. [实现一个Observer数据监听器，能够对数据对象的所有属性进行监听](#vm2)
-  3. [实现一个Watcher观察者，将Compile的解析结果，与Observer所观察的对象连接起来，建立关系，在Observer观察到对象数据变化时，接收通知，同时更新DOM](#vm3)
-  4. [创建一个公共的入口对象，接收初始化的配置并且协调上面三个模块，也就是vue](#vm4)
-  5. [html中使用](#vm5)
+  1. [实现一个Compiler模板解析器，能够对模版中的指令和插值表达式进行解析,并且赋予不同的操作](https://github.com/mmm1118/MVVM-demo/blob/master/src/compile.js)
+  2. [实现一个Observer数据监听器，能够对数据对象的所有属性进行监听](https://github.com/mmm1118/MVVM-demo/blob/master/src/observe.js)
+  3. [实现一个Watcher观察者，将Compile的解析结果，与Observer所观察的对象连接起来，建立关系，在Observer观察到对象数据变化时，接收通知，同时更新DOM](https://github.com/mmm1118/MVVM-demo/blob/master/src/watcher.js)
+  4. [创建一个公共的入口对象，接收初始化的配置并且协调上面三个模块，也就是vue](https://github.com/mmm1118/MVVM-demo/blob/master/src/vue.js)
+  5. [html中使用](https://github.com/mmm1118/MVVM-demo/blob/master/index.html)
 
 
 ![MVVM](https://img-blog.csdnimg.cn/20190514173210964.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ptMDYyMDExMTg=,size_16,color_FFFFFF,t_70)
 
-```mermaid
-graph TB
-A[new Vue]  --> B(compile-解析指令 表达式)
-A --> C(Observer-数据劫持)
-B--new Watcher-->E(Watcher-负责把compile 模块 与observe 模块连接起来)
-E--接受到通知 触发updata  -->F{updater-更新视图}
-B--初始化视图-->F
-C--new Dep 数据改变触发dep.notify-->D((Dep))
-D--dep.notify通知变化-->E
-E--dep.addSub添加订阅者-->D
-
-```
 
 new Vue > compile > 指令 表达式 解析(new Watcher -订阅数据变化 ) > observe 数据劫持（简体数据改变 new Dep > addSub(watcher存储起来)> 数据改变就通知dep.notify）> watcher 接受到通知 触发updata  更新视图 
  多个watcher 怎么管理？> 使用发布订阅者模式> 有watcher就存储起来 > 数据改变调用updata通知所有的订阅者更新数据
